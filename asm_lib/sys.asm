@@ -4,7 +4,7 @@ public exit
 
 section ".exit" executable
 exit:
-  xor ax, ax
-  inc ax
-  xor bx, bx
+  xor eax, eax
+  inc rax
+  xor ebx, ebx
   int 0x80

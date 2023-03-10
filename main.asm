@@ -5,17 +5,24 @@ include "asm_lib/fmt.inc"
 include "asm_lib/sys.inc"
 
 section ".data" writable
-  fmt db "[%d]", 0
-;   name db "Roma", 0
+  fmt db "%s:\n\t%d %c 2 === %d\n\t%d %c%c 1 === %d\n", 0
+  msg db "half(n)", 0
 
 section ".text" executable
 _start:
-  ; push 15
-  ; push name
-  push 0x7375646f
+  mov rax, 3600
+  mov rbx, 1800
+  push rbx
+  push ">"
+  push ">"
+  push rax
+  push rbx
+  push "/"
+  push rax
+  mov rax, msg
+  push rax
   mov rax, fmt
   call print_f
-  call print_empty_line
   jmp exit
 
 section ".print_f" executable
@@ -28,7 +35,17 @@ print_f:
         je .close
         cmp [rax], byte "%"
         je .special_char
+        cmp [rax], byte '\'
+        je .special_escape_char
         jmp .default_char
+        .special_escape_char:
+          inc rax
+          cmp [rax], byte "n"
+          je .print_empty_line
+          cmp [rax], byte "t"
+          je .print_tab
+          cmp [rax], byte '\'
+          je .print_back_slash_char
         .special_char:
           inc rax
           cmp [rax], byte "s"
@@ -43,6 +60,18 @@ print_f:
           je .print_char
           cmp [rax], byte "%"
           je .print_percent
+          jmp .next_step
+        .print_empty_line:
+          call print_empty_line
+          jmp .next_step
+        .print_tab:
+          call print_tab
+          jmp .next_step
+        .print_back_slash_char:
+          push rax
+            mov rax, '\'
+            call print_char
+          pop rax
           jmp .next_step
         .print_string:
           push rax

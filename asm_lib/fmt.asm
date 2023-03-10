@@ -6,10 +6,12 @@ public print_hex
 public print_string
 public print_char
 public print_empty_line
+public print_tab
 
 include "str.inc"
 
 section ".bss" writable
+  _bss_tab db "    ", 0
   _bss_char rb 1
 
 section ".print_number" executable
@@ -83,11 +85,20 @@ print_char:
 
 section ".print_empty_line" executable
 print_empty_line:
-  push ax
+  push rax
     xor eax, eax
-    mov ax, 0xA
+    mov rax, 0xA
     call print_char
-  pop ax
+  pop rax
+  ret
+
+section ".print_tab" executable
+print_tab:
+  push rax
+    xor eax, eax
+    mov rax, _bss_tab
+    call print_string
+  pop rax
   ret
 
 section ".print_oct" executable
