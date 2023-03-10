@@ -13,5 +13,6 @@ $(LIB_DIR)/%.o: $(LIB_DIR)/%.$(LANG)
 build: $(NAME).$(LANG) $(LIBS_OBJ)
 	@$(CC) $<
 	@ld $(NAME).o $(LIBS_OBJ) $(LD_FLAGS) $(NAME)
+	@rm $(NAME).o
 run: $(NAME)
 	./$<
