@@ -18,5 +18,5 @@
       - **gcd** - this function finds the greatest common divisor according to the Euclid algorithm
       - **fibonacci** - this function calculates the n number fibonacci using only a loop without the stack
       - **factorial** - this function calculates the n number factorial using very ez algoritm in loop
-	4. **"asm_lib/`sys.asm`"** - this library implements system calls:
-			- **exit** - this function passes the necessary parameters to the registers to terminate the program and causes a system interrupt
+  4. **"asm_lib/`sys.asm`"** - this library implements system calls:
+      - **exit** - this function passes the necessary parameters to the registers to terminate the program and causes a system interrupt
