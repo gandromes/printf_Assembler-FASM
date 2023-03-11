@@ -4,7 +4,7 @@ public _start
 include "asm_lib/fmt.inc"
 include "asm_lib/sys.inc"
 
-section ".data" writable
+section ".bss" writable
   fmt db "%s:\n\t%d %c 2 === %d\n\t%d %c%c 1 === %d\n", 0
   msg db "half(n)", 0
 
@@ -19,8 +19,7 @@ _start:
   push rbx
   push "/"
   push rax
-  mov rax, msg
-  push rax
+  push msg 
   mov rax, fmt
   call print_f
   jmp exit
