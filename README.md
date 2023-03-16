@@ -38,9 +38,7 @@ half(n):
     3600 / 2 === 1800
     3600 >> 1 === 1800
 ```
-
-# About the project:
-- ***This repository was created in order to demonstrate the skills of working with low-level Assembler code (FASM) and the ability to implement basic functions using the example of `printf`***
+## Implement libs:
 
 1. **asm_lib/`fmt.asm`** - this library implements functions to output something (print_*):
     - **print_number** - we divide the number by 10 as long as possible, add the character "0" to the remainder of the division, which means converting the number n (0-9) to the character n ("0"-"9") and put it on the stack, as soon as the original number cannot be divided, we extract n("0"-"9") from the stack, one by one and execute print_char().
