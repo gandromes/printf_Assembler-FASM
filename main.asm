@@ -5,22 +5,27 @@ include "asm_lib/fmt.inc"
 include "asm_lib/sys.inc"
 
 section ".data" writable
-  fmt db "%s:\n\t%d %c 2 === %d\n\t%d %c%c 1 === %d\n", 0
-  msg db "half(n)", 0
+  fmt db "%s:\n\t%d %c %d %s %d\n\t%d %c%c %d %s %d\n", 0
+  title db "half(n)", 0
+  strict_equal db "===", 0
 
 section ".text" executable
 _start:
   mov rax, 3600
   mov rbx, 1800
+
   push rbx
+  push strict_equal
+  push 1
   push ">"
   push ">"
   push rax
   push rbx
+  push strict_equal
+  push 2
   push "/"
   push rax
-  mov rax, msg
-  push rax
+  push title
   mov rax, fmt
   call print_f
   jmp exit
