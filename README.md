@@ -4,14 +4,14 @@
 ## Example:
 
 **Input**
-```bash
+```asm
   fmt db "%s:\n\t%d %c %d %s %d\n\t%d %c%c %d %s %d\n", 0
   title db "half(n)", 0
   strict_equal db "===", 0
 ```
 
 **CODE**
-```bash
+```asm
   mov rax, 3600
   mov rbx, 1800
 
@@ -33,7 +33,7 @@
 ```
 
 **Output**
-```bash
+```java
 half(n):
     3600 / 2 === 1800
     3600 >> 1 === 1800
