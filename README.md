@@ -5,27 +5,40 @@
 
 **Input**
 ```asm
-  fmt db "%s:\n\t%d %c %d %s %d\n\t%d %c%c %d %s %d\n", 0
+  fmt db "%s:\n\tdec|> %d %c %d %s %d \thex|> %x %c %x %s %x \toct|> %o %c %o %s %o\n\tdec|> %d %s %d %s %d\thex|> %x %s %x %s %x\toct|> %o %s %o %s %o\n", 0
   title db "half(n)", 0
   strict_equal db "===", 0
+  right_shifts db ">>", 0
 ```
 
 **CODE**
 ```asm
   mov rax, 3600
   mov rbx, 1800
+  mov rcx, 3     ; i
 
-  push rbx
-  push strict_equal
-  push 1
-  push ">"
-  push ">"
-  push rax
-  push rbx
-  push strict_equal
-  push 2
-  push "/"
-  push rax
+  .for:
+    cmp rcx, 0   ;| condition
+    je .then_for ;| i > 0
+    dec rcx      ;| i--
+      push rbx          ;| body
+      push strict_equal ;|
+      push 1            ;|
+      push right_shifts ;|
+      push rax          ;|
+    jmp .for
+  .then_for:
+    cmp rcx, 3  ;| condition
+    je .rof     ;| i < 3
+    inc rcx     ;| i++
+      push rbx           ;| body
+      push strict_equal  ;|
+      push 2             ;|
+      push "/"           ;|
+      push rax           ;|
+    jmp .then_for
+  .rof:
+
   push title
   mov rax, fmt
   call print_f
@@ -35,8 +48,8 @@
 **Output**
 ```java
 half(n):
-    3600 / 2 === 1800
-    3600 >> 1 === 1800
+    dec|> 3600 / 2 === 1800     hex|> 0xE10 / 0x2 === 0x708     oct|> 07020 / 02 === 03410
+    dec|> 3600 >> 1 === 1800    hex|> 0xE10 >> 0x1 === 0x708    oct|> 07020 >> 01 === 03410
 ```
 ## Implement libs:
 
@@ -52,11 +65,5 @@ half(n):
     - **print_bytes** - this function takes a tuple of numbers and the number of elements in it, then goes through each number and calls print_number on it, increments the counter and this cycle ends only when the counter reaches the number of elements in the tuple
 2. **"asm_lib/`str.asm`"** - this library implements functions to work with strings:
     - **length_string** - we go along the original string until we reach 0 bytes (the end of the string), incrementing the counter, at the end we return it
-    - **number_to_string** - we create a counter and divide the number by 10 each time, add "0" to the remaining n(0-9), we get n("0"-"9"), put it on the stack, create a counter 2 from 0 to the value of the first counter, take n("0"-"9") from the stack and place it at the source address plus the offset in the form of counter2 and increase the counter when counter2 is equal to the first counter, this means that you need to put the end of line character (byte 0)
-    - **string_to_number** - we go along the line, increment the counter, while subtracting the character "0" from n ("0"-"9"), thus, we get a number that we subsequently put on the stack. Let's create a counter2, which will correspond to the value 0 going up to the first counter, then take a number from the stack and multiply it by 10, then multiply this number by the value of counter2 (exmp: "413" == 4 * 10 * 3 + 1 * 10 * 2 + 3 * 10 * 1)
-3. **"asm_lib/`mth.asm`"** - this library implements mathematical functions:
-    - **gcd** - this function finds the greatest common divisor according to the Euclid algorithm
-    - **fibonacci** - this function calculates the n number fibonacci using only a loop without the stack
-    - **factorial** - this function calculates the n number factorial using very ez algoritm in loop
-4. **"asm_lib/`sys.asm`"** - this library implements system calls:
+3. **"asm_lib/`sys.asm`"** - this library implements system calls:
     - **exit** - this function passes the necessary parameters to the registers to terminate the program and causes a system interrupt

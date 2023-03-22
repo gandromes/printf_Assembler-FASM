@@ -5,26 +5,39 @@ include "asm_lib/fmt.inc"
 include "asm_lib/sys.inc"
 
 section ".data" writable
-  fmt db "%s:\n\t%d %c %d %s %d\n\t%d %c%c %d %s %d\n", 0
+  fmt db "%s:\n\tdec|> %d %c %d %s %d \thex|> %x %c %x %s %x \toct|> %o %c %o %s %o\n\tdec|> %d %s %d %s %d\thex|> %x %s %x %s %x\toct|> %o %s %o %s %o\n", 0
   title db "half(n)", 0
   strict_equal db "===", 0
+  right_shifts db ">>", 0
 
 section ".text" executable
 _start:
   mov rax, 3600
   mov rbx, 1800
+  mov rcx, 3
 
-  push rbx
-  push strict_equal
-  push 1
-  push ">"
-  push ">"
-  push rax
-  push rbx
-  push strict_equal
-  push 2
-  push "/"
-  push rax
+  .for:
+    cmp rcx, 0   ;| condition
+    je .then_for ;| i > 0
+    dec rcx      ;| i--
+      push rbx          ;| body
+      push strict_equal ;|
+      push 1            ;|
+      push right_shifts ;|
+      push rax          ;|
+    jmp .for
+  .then_for:
+    cmp rcx, 3  ;| condition
+    je .rof     ;| i < 3
+    inc rcx     ;| i++
+      push rbx           ;| body
+      push strict_equal  ;|
+      push 2             ;|
+      push "/"           ;|
+      push rax           ;|
+    jmp .then_for
+  .rof:
+
   push title
   mov rax, fmt
   call print_f
@@ -50,13 +63,15 @@ print_f:
           cmp [rax], byte "t"
           je .print_tab
           cmp [rax], byte '\'
-          je .print_back_slash_char
+          je .print_default_escape_char
         .special_char:
           inc rax
           cmp [rax], byte "s"
           je .print_string
           cmp [rax], byte "d"
           je .print_number
+          cmp [rax], byte "b"
+          je .print_bin
           cmp [rax], byte "o"
           je .print_oct
           cmp [rax], byte "x"
@@ -64,7 +79,7 @@ print_f:
           cmp [rax], byte "c"
           je .print_char
           cmp [rax], byte "%"
-          je .print_percent
+          je .print_default_special_char
           jmp .next_step
         .print_empty_line:
           call print_empty_line
@@ -72,7 +87,7 @@ print_f:
         .print_tab:
           call print_tab
           jmp .next_step
-        .print_back_slash_char:
+        .print_default_escape_char:
           push rax
             mov rax, '\'
             call print_char
@@ -108,7 +123,13 @@ print_f:
             call print_char
           pop rax
           jmp .shift_stack
-        .print_percent:
+        .print_bin:
+          push rax
+            mov rax, [rsp+rbx]
+            call print_bin
+          pop rax
+          jmp .shift_stack
+        .print_default_special_char:
           push rax
             mov rax, "%"
             call print_char

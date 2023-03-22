@@ -172,8 +172,9 @@ print_string:
   push rbx
   push rcx
   push rdx
-    call length_string
     mov rcx, rax
+    call length_string
+    mov rdx, rax
     mov rax, 4
     xor ebx, ebx
     inc ebx
