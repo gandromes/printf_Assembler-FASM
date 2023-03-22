@@ -69,6 +69,8 @@ half(n):
     - **exit** - this function passes the necessary parameters to the registers to terminate the program and causes a system interrupt
 
 ## How to use:
-###  0) your system must necessarily be any Linux distribution
-###  1) clone this repository
-###  2) write "make" in the console
+**0) your system must necessarily be any Linux distribution**
+
+**1) clone this repository**
+
+**2) write "make" in the console**
