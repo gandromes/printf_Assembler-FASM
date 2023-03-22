@@ -67,3 +67,8 @@ half(n):
     - **length_string** - we go along the original string until we reach 0 bytes (the end of the string), incrementing the counter, at the end we return it
 3. **"asm_lib/`sys.asm`"** - this library implements system calls:
     - **exit** - this function passes the necessary parameters to the registers to terminate the program and causes a system interrupt
+
+## How to use:
+###  0) your system must necessarily be any Linux distribution
+###  1) clone this repository
+###  2) write "make" in the console
